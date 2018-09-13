@@ -2,14 +2,18 @@
   "name": "vue-photos-scroll",
   "description": "A Vue.js project",
   "version": "1.0.1",
-  "author": "潘梦琳 <panmenglin@icourt.cc>",
+  "author": "msx.pan <msx.pan@outlook.com>",
   "license": "MIT",
-  "main": "src/lib/index.js",
-  "private": true,
+  "main": "dist/vue-photos-scroll.js",
+  "private": false,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
     "build": "cross-env NODE_ENV=production webpack",
     "changelog": "standard-version"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panmenglin/vue-photos-scroll.git"
   },
   "dependencies": {
     "photoswipe": "^4.1.2",
