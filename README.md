@@ -1,6 +1,6 @@
 # vue-photos-scroll
 
-[![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
+[![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](https://github.com/panmenglin/vue-photos-scroll.git)
 
 
 照片滚动加载
