@@ -152,6 +152,7 @@ export default {
         fullscreenEl: false,
         mouseUsed: false,
         preload: [1, 3],
+        tapToToggleControls: false,
         isClickableElement: function (el) {
           return true
         }
