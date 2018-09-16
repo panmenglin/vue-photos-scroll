@@ -46,9 +46,7 @@ export default {
   },
   mounted () {
     this.curPage = this.loadParams[this.pagerKey]
-    if (this.deltaHeight) {
-      this.$refs.wrapper.style.height = window.innerHeight - this.deltaHeight + 'px'
-    }
+    this.$refs.wrapper.style.height = window.innerHeight - this.$refs.wrapper.offsetTop + 'px'
 
     this.loadList()
 
@@ -120,8 +118,9 @@ export default {
     async scroll () {
       if (this.$refs.scrollWrapper) {
         let endItem = this.$refs.scrollWrapper.querySelector('.pic_item_end')
+        let deltaHeight = this.$refs.wrapper.offsetTop
 
-        if (!eleUnvisible(endItem, this.deltaHeight)) {
+        if (!eleUnvisible(endItem, deltaHeight)) {
           await this.loadList()
         }
       }
@@ -134,19 +133,19 @@ function isScrollY () {
 }
 
 function getScrollWidth () {
-  var ele = document.createElement('div')
+  let ele = document.createElement('div')
   ele.style.cssText = 'position:absolute;width:100px;height:100px;overflow:scroll;left:-1000px'
   document.body.appendChild(ele)
-  var offsetWidth = ele.offsetWidth
-  var clientWidth = ele.clientWidth
-  var scrollWidth = offsetWidth - clientWidth
+  let offsetWidth = ele.offsetWidth
+  let clientWidth = ele.clientWidth
+  let scrollWidth = offsetWidth - clientWidth
   document.body.removeChild(ele)
   return scrollWidth
 }
 
 function eleUnvisible (ele, deltaHeight) {
-  var getBoundingClientRect = ele.getBoundingClientRect()
-  var scrollWidthY = isScrollY() ? getScrollWidth() : 0
+  let getBoundingClientRect = ele.getBoundingClientRect()
+  let scrollWidthY = isScrollY() ? getScrollWidth() : 0
   if (getBoundingClientRect.bottom < -500) {
     return true
   }
@@ -159,19 +158,20 @@ function eleUnvisible (ele, deltaHeight) {
 
 <style scoped>
 .wrapper {
-  overflow: auto
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .pic_item {
   display: inline-block;
   background-position: center;
-  background-size: cover
+  background-size: cover;
 }
 
 .pic_item_end {
   line-height: .2rem;
   text-align: center;
-  padding: .1rem 0
+  padding: .1rem 0;
 }
 
 </style>
