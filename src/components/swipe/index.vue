@@ -93,11 +93,7 @@ export default {
   mounted () {
   },
   methods: {
-    openPhotoSwipe (items, index) {
-      console.log(this.loadedArr)
-
-      this.tmp_list = items
-      let _this = this
+    imgSize (items) {
       items.forEach((item) => {
         function getNatural (src) {
           var image = new Image()
@@ -106,15 +102,25 @@ export default {
           var naturalHeight = image.height
           return {width: naturalWidth, height: naturalHeight}
         }
-
+        if (!item.width || !item.height) {
+          let natural = getNatural(item[this.imgKey])
+          item.width = natural.width
+          item.height = natural.height
+        }
+      })
+      return items
+    },
+    async openPhotoSwipe (items, index) {
+      items = await this.imgSize(items)
+      this.tmp_list = items
+      let _this = this
+      items.forEach((item) => {
         item.src = item.reviewSrc
 
         item.originSrc = item[_this.originImgKey]
 
-        let natural = getNatural(item[_this.imgKey])
-
-        let curHeight = natural.height
-        let curWidth = natural.width
+        let curHeight = item.height
+        let curWidth = item.width
 
         if (curHeight > curWidth) {
           curWidth = 450 * curWidth / curHeight
@@ -152,7 +158,8 @@ export default {
         fullscreenEl: false,
         mouseUsed: false,
         preload: [1, 3],
-        tapToToggleControls: false,
+        pinchToClose: false,
+        // closeOnVerticalDrag: false,
         isClickableElement: function (el) {
           return true
         }
@@ -167,7 +174,8 @@ export default {
       })
 
       this.gallery.listen('afterChange', () => {
-        if (decodeURI(this.gallery.itemHolders[1].el.querySelector('img').src) === this.gallery.currItem[this.originImgKey]) {
+        if (this.loadedArr.indexOf(this.gallery.currItem.src) >= 0) {
+          this.gallery.currItem.src = this.gallery.currItem[_this.originImgKey]
           this.canLoadImg = false
         } else {
           this.canLoadImg = true
@@ -175,17 +183,25 @@ export default {
       })
     },
     loadImg () {
+      if (this.gallery.itemHolders[1].el.querySelector('img')) {
 
       this.gallery.itemHolders[1].el.querySelector('img').onload = function () {
       }
 
-      this.loadedArr.push(this.gallery.currItem.reviewSrc)
+        this.gallery.itemHolders[1].el.querySelector('img').onerror = () => {
+          store.dispatch('operateLoader', -1)
+          this.gallery.itemHolders[1].el.querySelector('img').src = this.gallery.currItem[this.originImgKey] + '_800'
+          this.canLoadImg = true
+        }
+
+        this.loadedArr.push(this.gallery.currItem.reviewSrc)
 
       this.gallery.itemHolders[1].el.querySelector('img').src = this.gallery.currItem[this.originImgKey]
 
-      this.gallery.items[this.gallery.itemHolders[1].index].src = this.tmp_list[this.gallery.itemHolders[1].index][this.imgKey] = this.tmp_list[this.gallery.itemHolders[1].index][this.originImgKey]
-      this.gallery.updateCurrItem()
-      this.canLoadImg = false
+      // this.gallery.items[this.gallery.itemHolders[1].index].src = this.tmp_list[this.gallery.itemHolders[1].index][this.originImgKey]
+      // this.gallery.updateCurrItem()
+        this.canLoadImg = false
+      }
     }
   }
 }
