@@ -125,9 +125,6 @@ export default {
         if (curHeight > curWidth) {
           curWidth = 450 * curWidth / curHeight
           curHeight = 450
-        } else {
-          curHeight = 375 * curHeight / curWidth
-          curWidth = 375
         }
 
         item.w = curWidth
